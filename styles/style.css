@@ -47,6 +47,7 @@
     font-weight: 700;
     font-size: inherit;
     font-family: inherit;
+    cursor: pointer;
 }
 
 .button:hover {
@@ -76,10 +77,10 @@
     margin-top: 2.2rem;
     margin-bottom: 1.2rem;
     color: var(--grayish-violet);
+    cursor: pointer;
 }
 
 .error {
-	color: var(--red);
 	border: .2em solid var(--red);
 	font-size: .5rem;
 }
@@ -708,7 +709,7 @@
     .stat-card hr {
     	height: 10px;
     	width: 50px;
-    	right: -15%;
+    	left: 100%;
     	top: 35%;
     }
 

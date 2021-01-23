@@ -58,39 +58,39 @@ window.onload = function() {
         list.appendChild(itemLink);
     };
 
-    function addToStorage (data){
-		var originalLink = [];
-		var shortLink = [];
+    function getToStorage(){
+    	let originalLink = new Array;
+    	let shortLink = new Array;
 
-		if(!(localStorage.length == 0)){
-			JSON.parse(localStorage['original']).forEach(link => {
-				originalLink.push(link);
-			});
-
-			JSON.parse(localStorage['short']).forEach(short => {
-				shortLink.push(short);
-			});
+    	if(!(localStorage.length == 0)){
+			originalLink = JSON.parse(localStorage['original']);
+			shortLink = JSON.parse(localStorage['short']);
 		};
-		// originalLink.push();
-		console.log(originalLink);
-		console.log(shortLink);
-		originalLink.push(data[0]);
-		shortLink.push(data[1]);
 
-    	localStorage.setItem('original', JSON.stringify(originalLink));
-    	localStorage.setItem('short', JSON.stringify(shortLink));
-    	// localStorage.clear();
+		return [originalLink, shortLink];
+    };
+
+    function setToStorage (data){
+		let storage = getToStorage();
+		
+		storage[0].push(data[0]);
+		storage[1].push(data[1]);
+
+    	localStorage.setItem('original', JSON.stringify(storage[0]));
+    	localStorage.setItem('short', JSON.stringify(storage[1]));
+    	localStorage.clear();
     };
 
     function apiShrt(e) {
         e.preventDefault();
+        this.disabled = true;
         var url = document.getElementById('url');
         if (url.classList.contains('error')) {
             url.classList.remove('error');
         };
 
         if (url.value === "") {
-            url.classList.add('error')
+            url.classList.add('error');
             url.placeholder = 'Please, add a url';
         } else {
             fetch("https://api.shrtco.de/v2/shorten?url=" + url.value)
@@ -98,12 +98,22 @@ window.onload = function() {
                 .then(data => {
                     if (data.ok) {
                         createNode([data.result.original_link, data.result.short_link]);
-                        addToStorage([data.result.original_link, data.result.short_link]);
+                        setToStorage([data.result.original_link, data.result.short_link]);
+                    }else{
+                    	url.classList.add('error');
+                    	alert(data.error);
                     };
                     url.value = "";
                     url.placeholder = 'Shorten a link here...';
                 });
         };
+        this.disabled = false;
+    };
+
+    var links = getToStorage();
+
+    for(var i = 0; i<links[0].length; i++){
+    	createNode([links[0][i], links[1][i]]);
     };
 
     var btnMenu = document.querySelector(".menu");
@@ -111,5 +121,4 @@ window.onload = function() {
 
     var btnshort = document.querySelector("#shorten");
     btnshort.addEventListener("click", apiShrt);
-
 };
