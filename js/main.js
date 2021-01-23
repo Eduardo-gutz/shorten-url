@@ -78,7 +78,6 @@ window.onload = function() {
 
     	localStorage.setItem('original', JSON.stringify(storage[0]));
     	localStorage.setItem('short', JSON.stringify(storage[1]));
-    	localStorage.clear();
     };
 
     function apiShrt(e) {
